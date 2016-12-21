@@ -16,6 +16,7 @@ exports.singin = function(req, res, next){
 }
 
 exports.singup = function(req, res, next){
+  console.log('signup');
   var email= req.body.email
   var password = req.body.password
   if (!email || !password) {

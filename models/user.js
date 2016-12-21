@@ -16,9 +16,20 @@ var userSchema = new Schema({
   },
   password:{
     type:String
+  },
+  name:{
+    type:String
+  },
+  lastName:{
+    type:String
+  },
+  location:{
+    type:String
+  },
+  sex:{
+    type:String
   }
 })
-
 
 //Incript the password before is saved
 userSchema.pre('save', function(next){
