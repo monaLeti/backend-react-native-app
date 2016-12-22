@@ -16,9 +16,13 @@ exports.singin = function(req, res, next){
 }
 
 exports.singup = function(req, res, next){
-  console.log('signup');
+  console.log(req.body);
   var email= req.body.email
   var password = req.body.password
+  var name = req.body.name
+  var lastName = req.body.lastName
+  var location = req.body.location
+  var sex = req.body.sex
   if (!email || !password) {
     return res.status(422).json({error:'Provide an email or a password'})
   }
@@ -32,7 +36,11 @@ exports.singup = function(req, res, next){
     }
     var user = new User({
       email:email,
-      password: password
+      password: password,
+      name:name,
+      lastName:lastName,
+      location:location,
+      sex:sex
     })
     user.save(function(err){
       if(err){
