@@ -3,6 +3,7 @@ const jwt = require('jwt-simple')
 const config = require('../config')
 
 function tokenForUser(user){
+  console.log('user');
   var timeStmp = new Date().getTime()
   return jwt.encode({
     sub: user.id,
@@ -12,7 +13,7 @@ function tokenForUser(user){
 
 exports.singin = function(req, res, next){
   var user = req.user
-  res.send({token: tokenForUser(user), user_id:user._id})
+  res.send({user_id:user._id})
 }
 
 exports.singup = function(req, res, next){
