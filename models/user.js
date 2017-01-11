@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt-nodejs')
+const Question = require('./question')
 
 var validateEmail = (email) => {
   return(/\S+@\S+\.\S+/).test(email)
@@ -28,7 +29,11 @@ var userSchema = new Schema({
   },
   sex:{
     type:String
-  }
+  },
+  questions:[{
+    type: Schema.Types.ObjectId,
+    ref: 'Question'
+  }]
 })
 
 //Incript the password before is saved

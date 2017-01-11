@@ -1,6 +1,8 @@
 const passport = require('passport')
 
 var AuthenticationController = require('../controllers/authentication_controller')
+var QuestionController = require('../controllers/questions')
+
 var passportService = require('./passport')
 
 var requireAuth= passport.authenticate('jwt', {session:false})
@@ -15,10 +17,17 @@ function protected(req, res, next){
 router.route('/protected')
   .get(requireAuth,protected)
 
-
+// Sign in routes
 router.route('/signup')
   .post(AuthenticationController.singup)
 
 router.route('/signin')
   .post([requireLogin, AuthenticationController.singin])
+
+//Questions Routes
+router.route('/createQuestion')
+  .post(QuestionController.createQuestion)
+
+router.route('/findNumberQuestion/:number')
+  .get(QuestionController.findNumberQuestion)
 module.exports = router
