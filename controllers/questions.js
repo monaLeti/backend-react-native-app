@@ -16,15 +16,11 @@ exports.createQuestion = function (req, res, next){
     category:category,
     date:date
   })
-  question.save(function(err, res){
-    console.log('after save err', err);
+  question.save().then(res => {
     console.log('after save res', res);
-    if(err){
-      return next(err)
-    } else {
-      // After save the question we should save the id question in the array of the user
-      return next(res)
-    }
+  })
+  .catch(err => {
+    console.log('after save res', err);
   })
 }
 
@@ -33,8 +29,10 @@ exports.findNumberQuestion = function (req, res, next){
   console.log('findNumberQuestion');
   var number = parseInt(req.params.number)
   console.log(req.params.number);
-  Question.find(function(err, res){
-    console.log('after find', err);
+  Question.find().limit(number).then(res => {
     console.log('after find', res);
-  }).limit(number)
+  })
+  .catch(err => {
+    console.log('after find', err);
+  })
 }
