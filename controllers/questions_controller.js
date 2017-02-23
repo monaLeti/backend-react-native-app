@@ -16,23 +16,40 @@ exports.createQuestion = function (req, res, next){
     category:category,
     date:date
   })
-  question.save().then(res => {
-    console.log('after save res', res);
+  question.save().then(response => {
+    console.log('after save res', response);
+    res.json({newQuestion:question})
   })
   .catch(err => {
     console.log('after save res', err);
+    next(err)
   })
 }
+
+// Get all de questions
+exports.findAllQuestion = function (req, res, next){
+  console.log('findAllQuestion');
+  Question.find().then(response => {
+    console.log('after find questions', response);
+    res.json(response)
+  })
+  .catch(err => {
+    console.log('after find questions', err);
+    next(err)
+  })
+}
+
 
 // Function to find a number of questions. It is used to load the questions
 exports.findNumberQuestion = function (req, res, next){
   console.log('findNumberQuestion');
   var number = parseInt(req.params.number)
   console.log(req.params.number);
-  Question.find().limit(number).then(res => {
-    console.log('after find', res);
+  Question.find().limit(number).then(response => {
+    console.log('after find', response);
   })
   .catch(err => {
     console.log('after find', err);
+    next(err)
   })
 }

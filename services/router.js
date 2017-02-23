@@ -1,7 +1,7 @@
 const passport = require('passport')
 
 var AuthenticationController = require('../controllers/authentication_controller')
-var QuestionController = require('../controllers/questions')
+var QuestionController = require('../controllers/questions_controller')
 
 var passportService = require('./passport')
 
@@ -27,6 +27,9 @@ router.route('/signin')
 //Questions Routes
 router.route('/createQuestion')
   .post(QuestionController.createQuestion)
+
+router.route('/findAllQuestion/')
+  .get(QuestionController.findAllQuestion)
 
 router.route('/findNumberQuestion/:number')
   .get(QuestionController.findNumberQuestion)
