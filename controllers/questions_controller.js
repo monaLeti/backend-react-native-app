@@ -1,26 +1,46 @@
 // Controller which implements the questions operations
 const Question = require('../models/question')
-
-
+const User = require('../models/user')
+var ObjectId = require('mongodb').ObjectID;
 // Function to create a new question
 exports.createQuestion = function (req, res, next){
-  console.log('createQuestion', req.body);
-  var title = req.body.title;
+  var user = req.body.user;
   var content = req.body.content;
   var category = req.body.category;
   var date = req.body.date;
-
+  console.log('user', user);
   var question = new Question({
-    title:title,
+    user:user,
     content:content,
     category:category,
     date:date
   })
   question.save().then(response => {
     console.log('after save res', response);
-    res.json({newQuestion:question})
-  })
-  .catch(err => {
+    User.findOne({_id: new ObjectId(user)}).then(user => {
+      console.log('user found', user);
+      res.json({newQuestion:question})
+    }).catch(err => {
+      console.log('user found err',err);
+      next(err)
+    })
+    // User.findOne({_id: new ObjectId(user)}, function (err, user) {
+    //   if(err){
+    //     console.log('userFoundErr', err);
+    //     next(err)
+    //   }else{
+    //     console.log('userFound',user);
+    //     res.json({newQuestion:question})
+    //   }
+    // });
+    // User.findById(user).then(userFound => {
+    //   console.log('userFound',userFound);
+    //   res.json({newQuestion:question})
+    // }).catch(err =>{
+    //   console.log('userFound', err);
+    //   next(err)
+    // })
+  }).catch(err => {
     console.log('after save res', err);
     next(err)
   })

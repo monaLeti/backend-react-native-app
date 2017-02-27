@@ -3,6 +3,10 @@ const Schema = mongoose.Schema;
 
 // Think to include the user of the answer
 var answerSchema = new Schema({
+  user:{
+    type:String,
+    default:''
+  },
   content: {
     type: String,
     default: ''

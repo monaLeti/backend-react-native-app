@@ -3,10 +3,10 @@ const Schema = mongoose.Schema;
 const Answer = require('./answer')
 
 var questionSchema = new Schema({
-  title: {
-    type: String,
-    default:'',
-    trim:true
+  user:{
+    type:String,
+    default: '',
+    required: 'Please inser userId'
   },
   content: {
     type: String,

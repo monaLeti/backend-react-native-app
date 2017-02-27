@@ -2,6 +2,7 @@ const passport = require('passport')
 
 var AuthenticationController = require('../controllers/authentication_controller')
 var QuestionController = require('../controllers/questions_controller')
+var AnswerController = require('../controllers/answers_controller')
 
 var passportService = require('./passport')
 
@@ -33,4 +34,9 @@ router.route('/findAllQuestion/')
 
 router.route('/findNumberQuestion/:number')
   .get(QuestionController.findNumberQuestion)
+
+
+//Answer Routes
+router.route('/createAnswer')
+  .post(AnswerController.createAnswer)
 module.exports = router
