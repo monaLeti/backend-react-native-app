@@ -1,0 +1,69 @@
+/* 1 */
+{
+    "_id" : ObjectId("58b28dcd2dfc7a04a2c361a4"),
+    "category" : "Niña dos años",
+    "answers" : [],
+    "date" : ISODate("2017-02-26T08:11:57.716Z"),
+    "content" : "Tengo una niña de dos años, que puedo haver pars entretenerla"
+    "__v" : 0
+}
+
+/* 2 */
+{
+    "_id" : ObjectId("58b296a42dfc7a04a2c361a6"),
+    "category" : "No comen",
+    "answers" : [],
+    "date" : ISODate("2017-02-26T08:49:40.403Z"),
+    "content" : "Intento que mis niños coman de todo. Sin embargo, mi hijo pequeño de dos años no quiere nada de verdura. Se lo he intentado esconder con otro tipo de comida, pero ningun resultado.",
+    "__v" : 0
+}
+
+/* 3 */
+{
+    "_id" : ObjectId("58b296ee2dfc7a04a2c361a7"),
+    "category" : "Animales",
+    "answers" : [],
+    "date" : ISODate("2017-02-26T08:50:54.852Z"),
+    "content" : "Mi gato odia a mis hijos. Debo de regalar el gato",
+    "__v" : 0
+}
+
+/* 4 */
+{
+    "_id" : ObjectId("58b29b022dfc7a04a2c361a8"),
+    "category" : "Comida",
+    "answers" : [],
+    "date" : ISODate("2017-02-26T09:08:18.132Z"),
+    "content" : "Estoy embarazada de cinco semanas y no se si deberia de dejar de comer carne",
+    "__v" : 0
+}
+
+/* 5 */
+{
+    "_id" : ObjectId("58b29bf52dfc7a04a2c361a9"),
+    "category" : "Marido",
+    "answers" : [],
+    "date" : ISODate("2017-02-26T09:12:21.164Z"),
+    "content" : "Mi marido no se acerca a mis hijos. Deberia de hablar con el?",
+    "__v" : 0
+}
+
+/* 6 */
+{
+    "_id" : ObjectId("58b29f502dfc7a04a2c361aa"),
+    "category" : "Inseminacion",
+    "answers" : [],
+    "date" : ISODate("2017-02-26T09:26:40.185Z"),
+    "content" : "Quiero inseminarme artificialmente. Conoceis alguna buena clinica?",
+    "__v" : 0
+}
+
+/* 7 */
+{
+    "_id" : ObjectId("58b301ab7d013e2b2818be03"),
+    "category" : "Dormir",
+    "answers" : [],
+    "date" : ISODate("2017-02-26T16:26:19.774Z"),
+    "content" : "Cuando mi hijo se deberia de ir a dormir",
+    "__v" : 0
+}
