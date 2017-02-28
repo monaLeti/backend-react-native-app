@@ -4,8 +4,9 @@ const Schema = mongoose.Schema;
 // Think to include the user of the answer
 var answerSchema = new Schema({
   user:{
-    type:String,
-    default:''
+    type:Schema.Types.ObjectId,
+    ref: 'user',
+    required: 'Please insert userId'
   },
   content: {
     type: String,
