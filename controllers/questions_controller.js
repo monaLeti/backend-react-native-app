@@ -1,18 +1,29 @@
-// User.findOne({_id: new ObjectId(user)}, {password:0}).then(user => {
-//   console.log('user found', user);
-//   res.json({
-//     newQuestion:question,
-//     userQuestion:user
-//   })
-// }).catch(err => {
-//   console.log('user found err',err);
-//   next(err)
-// })
-
 // Controller which implements the questions operations
 const Question = require('../models/question')
 const User = require('../models/user')
 var ObjectId = require('mongodb').ObjectID;
+
+//Function to get all the comments with the user joins
+function aggregateQuestions(res){
+  Question.aggregate([
+    {
+      $lookup:{
+        "from":"users",
+        "localField":"user",
+        "foreignField":"_id",
+        "as":"user_join"
+      }
+    }
+  ], function(err, questions){
+    if(err){
+      return new Error (err)
+    }else{
+      res.json({
+        questions
+      })
+    }
+  })
+}
 
 // Function to create a new question
 exports.createQuestion = function (req, res, next){
@@ -26,64 +37,60 @@ exports.createQuestion = function (req, res, next){
     category:category,
     date:date
   })
-
-
-  question.save().then(question => {
-    console.log('after save res', question);
-    Question.aggregate([
-      {
-        $lookup:{
-          "from":"users",
-          "localField":"user",
-          "foreignField":"_id",
-          "as":"user_join"
+  question.save().then(questionSaved => {
+    Question.find()
+      .populate('user')
+      .exec(function(err, questions){
+        if (err) {
+          console.log('err findAnswers');
+          next(err)
+        } else {
+          console.log('answers', questions);
+          res.json({questions})
         }
-      }
-    ], function(err, questions){
-      if(err){
-        console.log('aggregate err',err);
-      }else{
-        console.log('aggregate res', questions);
-        res.json({
-          questions
-        })
-      }
-    })
+      })
   }).catch(err => {
-    console.log('after save res', err);
     next(err)
   })
 }
 
 // Get all de questions
 exports.findAllQuestion = function (req, res, next){
-  Question.aggregate([
-    {
-      $lookup:{
-        "from":"users",
-        "localField":"user",
-        "foreignField":"_id",
-        "as":"user_join"
+  Question.find()
+    .populate('user')
+    .exec(function(err, questions){
+      if (err) {
+        console.log('err findAnswers');
+        next(err)
+      } else {
+        console.log('answers', questions);
+        res.json({questions})
       }
-    }
-  ], function(err, questions){
-    if(err){
-      console.log('aggregate findAllQuestion err',err);
-    }else{
-      console.log('aggregate findAllQuestion res', questions);
-      res.json({
-        questions
-      })
-    }
-  })
+    })
 }
 
 
+exports.findAnswers = function(req, res, next){
+  Question.findOne({_id: new ObjectId(req.params.questionId)})
+    .populate('user')
+    .populate({
+      path: 'answers',
+      populate: {path:'user'}
+    })
+    .exec(function(err, question){
+      if (err) {
+        console.log('err findAnswers');
+        next(err)
+      } else {
+        console.log('answers', question);
+        res.json({question})
+      }
+    })
+}
 // Function to find a number of questions. It is used to load the questions
 exports.findNumberQuestion = function (req, res, next){
   console.log('findNumberQuestion');
   var number = parseInt(req.params.number)
-  console.log(req.params.number);
   Question.find().limit(number).then(response => {
     console.log('after find', response);
   })
