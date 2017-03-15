@@ -35,11 +35,11 @@ router.route('/findAllQuestion/')
 router.route('/findNumberQuestion/:number')
   .get(QuestionController.findNumberQuestion)
 
-router.route('/findAnswers/:questionId')
-  .get(QuestionController.findAnswers)
-
 
 //Answer Routes
 router.route('/createAnswer/:questionId')
   .post(AnswerController.createAnswer)
+
+router.route('/findAnswers/:questionId')
+  .get(AnswerController.findAnswers)
 module.exports = router

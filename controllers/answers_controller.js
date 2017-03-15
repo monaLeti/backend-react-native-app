@@ -39,3 +39,22 @@ exports.createAnswer = (req, res, next) => {
     next(err)
   })
 }
+
+//Find the answer of a specific question
+exports.findAnswers = function(req, res, next){
+  Question.findOne({_id: new ObjectId(req.params.questionId)})
+    .populate('user')
+    .populate({
+      path: 'answers',
+      populate: {path:'user'}
+    })
+    .exec(function(err, question){
+      if (err) {
+        console.log('err findAnswers');
+        next(err)
+      } else {
+        console.log('answers', question);
+        res.json({question})
+      }
+    })
+}

@@ -39,6 +39,7 @@ exports.createQuestion = function (req, res, next){
   })
   question.save().then(questionSaved => {
     Question.find()
+      .sort({date: -1})
       .populate('user')
       .exec(function(err, questions){
         if (err) {
@@ -57,6 +58,7 @@ exports.createQuestion = function (req, res, next){
 // Get all de questions
 exports.findAllQuestion = function (req, res, next){
   Question.find()
+    .sort({date: -1})
     .populate('user')
     .exec(function(err, questions){
       if (err) {
@@ -70,23 +72,6 @@ exports.findAllQuestion = function (req, res, next){
 }
 
 
-exports.findAnswers = function(req, res, next){
-  Question.findOne({_id: new ObjectId(req.params.questionId)})
-    .populate('user')
-    .populate({
-      path: 'answers',
-      populate: {path:'user'}
-    })
-    .exec(function(err, question){
-      if (err) {
-        console.log('err findAnswers');
-        next(err)
-      } else {
-        console.log('answers', question);
-        res.json({question})
-      }
-    })
-}
 // Function to find a number of questions. It is used to load the questions
 exports.findNumberQuestion = function (req, res, next){
   console.log('findNumberQuestion');
