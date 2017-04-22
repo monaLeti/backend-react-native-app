@@ -16,23 +16,22 @@ var localOptions = {
 var localStrategy = new LocalStrategy(localOptions, function(email, password, done){
   //First look for the user in the database
   User.findOne({email:email}, function(err, user){
-    console.log('local');
-    console.log(email);
     if(err){
       done(err,null)
     }
     if(!user){
       done(null, false)
+    }else{
+      user.comparePassword(password, function(err, isMatch){
+        if(err){
+          done(err,null)
+        }
+        if(!isMatch){
+          done(null, false)
+        }
+        done(null, user)
+      })
     }
-    user.comparePassword(password, function(err, isMatch){
-      if(err){
-        done(err,null)
-      }
-      if(!isMatch){
-        done(null, false)
-      }
-      done(null, user)
-    })
   })
 })
 
