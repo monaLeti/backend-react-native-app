@@ -3,7 +3,7 @@ const Question = require('../models/question')
 const User = require('../models/user')
 var ObjectId = require('mongodb').ObjectID;
 
-//Function to get all the comments with the user joins
+//Function to get all the comments with the user joins(is not used now)
 function aggregateQuestions(res){
   Question.aggregate([
     {
@@ -83,4 +83,32 @@ exports.findNumberQuestion = function (req, res, next){
     console.log('after find', err);
     next(err)
   })
+}
+
+//Function to find questions by category
+exports.findQuestionByCategory = function (req, res, next){
+  console.log(req.query);
+  var categorySearch = req.params.category
+  Question.find({category:categorySearch})
+    .sort({date: -1})
+    .populate('user')
+    .then(questions => {
+      res.json({questions})
+    }).catch(err =>{
+      next(err)
+    })
+}
+
+//Function to update the positiveVotes and n0egativeVotes properties
+exports.updateReaction = function (req, res, next){
+  console.log('updateReaction', req.body, req.params);
+  Question.update({_id:req.params.questionId},{ $inc : {nPositiveVotes:req.body.nPositiveVotes, nNegativeVotes:req.body.nNegativeVotes}})
+    .then(response =>{
+      console.log('after update',response);
+      res.json(response)
+    })
+    .catch(err =>{
+      console.log('after update err',err);
+      next(err)
+    })
 }

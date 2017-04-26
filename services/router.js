@@ -32,6 +32,12 @@ router.route('/createQuestion')
 router.route('/findAllQuestion/')
   .get(QuestionController.findAllQuestion)
 
+router.route('/findQuestionByCategory/:category')
+  .get(QuestionController.findQuestionByCategory)
+
+router.route('/updateReaction/:questionId')
+  .put(QuestionController.updateReaction)
+
 router.route('/findNumberQuestion/:number')
   .get(QuestionController.findNumberQuestion)
 
