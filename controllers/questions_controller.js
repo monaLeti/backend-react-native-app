@@ -35,7 +35,6 @@ exports.createQuestion = function (req, res, next){
     user: user,
     content:content,
     category:category,
-    date:date
   })
   question.save().then(questionSaved => {
     Question.find()
@@ -57,18 +56,34 @@ exports.createQuestion = function (req, res, next){
 
 // Get all de questions
 exports.findAllQuestion = function (req, res, next){
-  Question.find()
-    .sort({date: -1})
-    .populate('user')
-    .exec(function(err, questions){
-      if (err) {
-        console.log('err findAnswers');
-        next(err)
-      } else {
-        console.log('answers', questions);
-        res.json({questions})
-      }
-    })
+  // Query sroting by population
+  if(req.query.popular){
+    Question.find()
+      .sort({nPositiveVotes:req.query.popular, date: -1})
+      .populate('user')
+      .exec(function(err, questions){
+        if (err) {
+          console.log('err findAnswers');
+          next(err)
+        } else {
+          console.log('answers', questions);
+          res.json({questions})
+        }
+      })
+  } else {
+    Question.find()
+      .sort({date: -1})
+      .populate('user')
+      .exec(function(err, questions){
+        if (err) {
+          console.log('err findAnswers');
+          next(err)
+        } else {
+          console.log('answers', questions);
+          res.json({questions})
+        }
+      })
+  }
 }
 
 
@@ -87,28 +102,80 @@ exports.findNumberQuestion = function (req, res, next){
 
 //Function to find questions by category
 exports.findQuestionByCategory = function (req, res, next){
-  console.log(req.query);
+  console.log(req.query.popular);
   var categorySearch = req.params.category
-  Question.find({category:categorySearch})
-    .sort({date: -1})
-    .populate('user')
-    .then(questions => {
-      res.json({questions})
-    }).catch(err =>{
-      next(err)
-    })
+  // Query sroting by population
+  if(req.query.popular){
+    Question.find({category:categorySearch})
+      .sort({nPositiveVotes:req.query.popular,date:-1})
+      .populate('user')
+      .then(questions => {
+        res.json({questions})
+      }).catch(err =>{
+        next(err)
+      })
+  }else{
+    Question.find({category:categorySearch})
+      .sort({date:-1})
+      .populate('user')
+      .then(questions => {
+        res.json({questions})
+      }).catch(err =>{
+        next(err)
+      })
+  }
 }
 
 //Function to update the positiveVotes and n0egativeVotes properties
 exports.updateReaction = function (req, res, next){
   console.log('updateReaction', req.body, req.params);
-  Question.update({_id:req.params.questionId},{ $inc : {nPositiveVotes:req.body.nPositiveVotes, nNegativeVotes:req.body.nNegativeVotes}})
-    .then(response =>{
-      console.log('after update',response);
-      res.json(response)
-    })
-    .catch(err =>{
-      console.log('after update err',err);
-      next(err)
-    })
+  if (req.body.nPositiveVotes === 1) {
+    Question.update(
+      {_id:req.params.questionId},
+      {
+        $inc : {
+          nPositiveVotes:req.body.nPositiveVotes,
+          nNegativeVotes:req.body.nNegativeVotes
+        },
+        $push: {
+          positiveVotes: new ObjectId(req.body.user)
+        },
+        $pull: {
+          negativeVotes: new ObjectId(req.body.user)
+        }
+      }
+    )
+      .then(response =>{
+        console.log('after update',response);
+        res.json(response)
+      })
+      .catch(err =>{
+        console.log('after update err',err);
+        next(err)
+      })
+  } else {
+    Question.update(
+      {_id:req.params.questionId},
+      {
+        $inc : {
+          nPositiveVotes:req.body.nPositiveVotes,
+          nNegativeVotes:req.body.nNegativeVotes
+        },
+        $push: {
+          negativeVotes: new ObjectId(req.body.user)
+        },
+        $pull: {
+          positiveVotes: new ObjectId(req.body.user)
+        }
+      }
+    )
+      .then(response =>{
+        console.log('after update',response);
+        res.json(response)
+      })
+      .catch(err =>{
+        console.log('after update err',err);
+        next(err)
+      })
+  }
 }
