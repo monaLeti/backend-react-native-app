@@ -19,9 +19,17 @@ var answerSchema = new Schema({
   nPositiveVotes: {
     type:Number
   },
+  positiveVotes:[{
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  }],
   nNegativeVotes: {
     type:Number
   },
+  negativeVotes:[{
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  }]
 })
 
 

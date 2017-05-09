@@ -1,6 +1,7 @@
 // Controller which implements the questions operations
 const Question = require('../models/question')
 const User = require('../models/user')
+const Answer = require('../models/answer')
 var ObjectId = require('mongodb').ObjectID;
 
 //Function to get all the comments with the user joins(is not used now)
@@ -128,54 +129,60 @@ exports.findQuestionByCategory = function (req, res, next){
 
 //Function to update the positiveVotes and n0egativeVotes properties
 exports.updateReaction = function (req, res, next){
-  console.log('updateReaction', req.body, req.params);
-  if (req.body.nPositiveVotes === 1) {
-    Question.update(
-      {_id:req.params.questionId},
-      {
-        $inc : {
-          nPositiveVotes:req.body.nPositiveVotes,
-          nNegativeVotes:req.body.nNegativeVotes
-        },
-        $push: {
-          positiveVotes: new ObjectId(req.body.user)
-        },
-        $pull: {
-          negativeVotes: new ObjectId(req.body.user)
+  Question.find({_id:req.params.questionId}).then( response =>{
+    var modelToUse = Question
+    if(response.length === 0){
+      modelToUse = Answer
+    }
+    if (req.body.nPositiveVotes === 1) {
+      modelToUse.update(
+        {_id:req.params.questionId},
+        {
+          $inc : {
+            nPositiveVotes:req.body.nPositiveVotes,
+            nNegativeVotes:req.body.nNegativeVotes
+          },
+          $push: {
+            positiveVotes: new ObjectId(req.body.user)
+          },
+          $pull: {
+            negativeVotes: new ObjectId(req.body.user)
+          }
         }
-      }
-    )
-      .then(response =>{
-        console.log('after update',response);
-        res.json(response)
-      })
-      .catch(err =>{
-        console.log('after update err',err);
-        next(err)
-      })
-  } else {
-    Question.update(
-      {_id:req.params.questionId},
-      {
-        $inc : {
-          nPositiveVotes:req.body.nPositiveVotes,
-          nNegativeVotes:req.body.nNegativeVotes
-        },
-        $push: {
-          negativeVotes: new ObjectId(req.body.user)
-        },
-        $pull: {
-          positiveVotes: new ObjectId(req.body.user)
+      ).then(response =>{
+          console.log('after update',response);
+          res.json(response)
+        })
+        .catch(err =>{
+          console.log('after update err',err);
+          next(err)
+        })
+    } else {
+      modelToUse.update(
+        {_id:req.params.questionId},
+        {
+          $inc : {
+            nPositiveVotes:req.body.nPositiveVotes,
+            nNegativeVotes:req.body.nNegativeVotes
+          },
+          $push: {
+            negativeVotes: new ObjectId(req.body.user)
+          },
+          $pull: {
+            positiveVotes: new ObjectId(req.body.user)
+          }
         }
-      }
-    )
-      .then(response =>{
-        console.log('after update',response);
-        res.json(response)
-      })
-      .catch(err =>{
-        console.log('after update err',err);
-        next(err)
-      })
-  }
+      )
+        .then(response =>{
+          console.log('after update',response);
+          res.json(response)
+        })
+        .catch(err =>{
+          console.log('after update err',err);
+          next(err)
+        })
+    }
+  }).catch(error => {
+    console.log('FIND ERROR',error);
+  })
 }
