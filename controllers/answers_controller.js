@@ -24,7 +24,6 @@ exports.createAnswer = (req, res, next) => {
               console.log('err findAnswers');
               next(err)
             } else {
-              console.log('answers', question);
               res.json({question})
             }
           })
