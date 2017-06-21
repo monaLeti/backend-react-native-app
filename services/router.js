@@ -8,15 +8,9 @@ var passportService = require('./passport')
 
 var requireAuth= passport.authenticate('jwt', {session:false})
 var requireLogin= passport.authenticate('local', {session:false})
+
 var router = require('express').Router()
 
-function protected(req, res, next){
-  res.send("Here's the secret")
-  next()
-}
-
-router.route('/protected')
-  .get(requireAuth,protected)
 
 // Sign in routes
 router.route('/signup')
@@ -24,6 +18,9 @@ router.route('/signup')
 
 router.route('/signin')
   .post([requireLogin, AuthenticationController.singin])
+
+router.route('/facebook_auth')
+  .post(AuthenticationController.singinFacebook);
 
 //Questions Routes
 router.route('/createQuestion')
@@ -48,5 +45,5 @@ router.route('/createAnswer/:questionId')
 
 router.route('/findAnswers/:questionId')
   .get(AnswerController.findAnswers)
-  
+
 module.exports = router

@@ -2,7 +2,7 @@ const express = require('express')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
-
+const passport = require('passport');
 
 
 var app = express()
@@ -13,6 +13,7 @@ mongoose.connect('mongodb://localhost:backend/backend')
 
 app.use(morgan('combined'))
 app.use(bodyParser.json())
+app.use(passport.initialize())
 app.use('/v1', router)
 
 var PORT = process.env.PORT || 3000
