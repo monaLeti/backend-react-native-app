@@ -28,8 +28,9 @@ var userSchema = new Schema({
   lastName:{
     type:String
   },
-  location:{
-    type:String
+  loc: {
+    type: [Number],  // [<longitude>, <latitude>]
+    index: '2dsphere'      // create the geospatial index
   },
   sex:{
     type:String

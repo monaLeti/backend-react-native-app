@@ -1,6 +1,7 @@
 const passport = require('passport')
 
 var AuthenticationController = require('../controllers/authentication_controller')
+var UserController = require('../controllers/user_controller')
 var QuestionController = require('../controllers/questions_controller')
 var AnswerController = require('../controllers/answers_controller')
 
@@ -22,7 +23,13 @@ router.route('/signin')
 router.route('/facebook_auth')
   .post(AuthenticationController.singinFacebook);
 
-//Questions Routes
+
+// User routes
+router.route('/updateUserLocation')
+  .put(UserController.updateUserLocation)
+
+
+// Questions Routes
 router.route('/createQuestion')
   .post(QuestionController.createQuestion)
 
@@ -38,8 +45,11 @@ router.route('/updateReaction/:questionId')
 router.route('/findNumberQuestion/:number')
   .get(QuestionController.findNumberQuestion)
 
+router.route('/findQuestionByLocation')
+  .get(QuestionController.findQuestionByLocation)
 
-//Answer Routes
+
+// Answer Routes
 router.route('/createAnswer/:questionId')
   .post(AnswerController.createAnswer)
 

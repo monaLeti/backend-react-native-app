@@ -127,6 +127,47 @@ exports.findQuestionByCategory = function (req, res, next){
   }
 }
 
+// Find Questions by User Location
+exports.findQuestionByLocation = function(req, res, next){
+  console.log('Find question by location', req.query.distance);
+  // Distance in km
+  var searchRadius = req.query.distance || 2
+  var coord = []
+  coord[0] = req.query.longitude || 0
+  coord[1] = req.query.latitude || 0
+  User.find({
+    loc:{
+      $geoWithin:{
+        $centerSphere: [coord, searchRadius/6371]
+      }
+    }
+  }).then(users =>{
+    console.log('users',users);
+    var questionFound = []
+    if(users.length == 0){
+      res.json(questionFound)
+    }
+    users.forEach(function(user,index){
+      Question.find({
+        user:user._id
+      }).then(questions =>{
+        console.log('index',index, users.length);
+        if(questions.length > 0){
+          console.log('questions', questions);
+          questionFound = questionFound.concat(questions)
+        }
+        if(index==users.length-1){
+          res.json(questionFound)
+        }
+      }).catch(err=>{
+        next(err)
+      })
+    })
+  }).catch(err=>{
+    next(err)
+  })
+}
+
 //Function to update the positiveVotes and negativeVotes properties
 exports.updateReaction = function (req, res, next){
   Question.find({_id:req.params.questionId}).then( response =>{
