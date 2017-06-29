@@ -14,7 +14,9 @@ function tokenForUser(user){
 
 exports.singin = function(req, res, next){
   var user = req.user
-  res.send({user_id:user._id})
+  user['password'] = undefined
+  console.log('user signin',user);
+  res.send({user_id:user})
 }
 
 exports.singinFacebook = function(req, res, next){
@@ -23,7 +25,7 @@ exports.singinFacebook = function(req, res, next){
     var facebook_id = response.data.id
     var name = response.data.name
     var email = response.data.email
-    User.find({facebook_id: response.data.id}, function(err, users){
+    User.find({facebook_id: response.data.id}, {password:0}, function(err, users){
       user = users[0]
       if(err){
         return next(err)
@@ -80,7 +82,8 @@ exports.singup = function(req, res, next){
       if(err){
         return next(err)
       }
-      res.json({user_id:user._id, token:tokenForUser(user)})
+      user['password'] = undefined
+      res.json({user_id:user, token:tokenForUser(user)})
     })
   })
 }

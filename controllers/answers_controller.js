@@ -52,7 +52,6 @@ exports.findAnswers = function(req, res, next){
         console.log('err findAnswers');
         next(err)
       } else {
-        console.log('answers', question);
         res.json({question})
       }
     })

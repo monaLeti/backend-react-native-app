@@ -28,6 +28,7 @@ function aggregateQuestions(res){
 
 // Function to create a new question
 exports.createQuestion = function (req, res, next){
+  console.log('createQuestion',req.body);
   var user = new ObjectId(req.body.user)
   var content = req.body.content;
   var category = req.body.category;
@@ -103,7 +104,7 @@ exports.findNumberQuestion = function (req, res, next){
 
 //Function to find questions by category
 exports.findQuestionByCategory = function (req, res, next){
-  console.log(req.query.popular);
+  console.log('findQuestionByCategory',req.query.popular);
   var categorySearch = req.params.category
   // Query sroting by population
   if(req.query.popular){
@@ -111,6 +112,7 @@ exports.findQuestionByCategory = function (req, res, next){
       .sort({nPositiveVotes:req.query.popular,date:-1})
       .populate('user')
       .then(questions => {
+        console.log('findQuestionByCategory',questions);
         res.json({questions})
       }).catch(err =>{
         next(err)
@@ -120,6 +122,7 @@ exports.findQuestionByCategory = function (req, res, next){
       .sort({date:-1})
       .populate('user')
       .then(questions => {
+        console.log('findQuestionByCategory second',questions);
         res.json({questions})
       }).catch(err =>{
         next(err)
@@ -129,12 +132,15 @@ exports.findQuestionByCategory = function (req, res, next){
 
 // Find Questions by User Location
 exports.findQuestionByLocation = function(req, res, next){
-  console.log('Find question by location', req.query.distance);
+
   // Distance in km
   var searchRadius = req.query.distance || 2
+  var categorySelected = req.query.category
+
   var coord = []
   coord[0] = req.query.longitude || 0
   coord[1] = req.query.latitude || 0
+
   User.find({
     loc:{
       $geoWithin:{
@@ -142,18 +148,19 @@ exports.findQuestionByLocation = function(req, res, next){
       }
     }
   }).then(users =>{
-    console.log('users',users);
     var questionFound = []
     if(users.length == 0){
       res.json(questionFound)
     }
     users.forEach(function(user,index){
-      Question.find({
+      var query = {
         user:user._id
-      }).then(questions =>{
-        console.log('index',index, users.length);
+      }
+      if(categorySelected){
+        query.category = categorySelected
+      }
+      Question.find(query).then(questions =>{
         if(questions.length > 0){
-          console.log('questions', questions);
           questionFound = questionFound.concat(questions)
         }
         if(index==users.length-1){
