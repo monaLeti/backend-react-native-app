@@ -104,11 +104,13 @@ exports.findNumberQuestion = function (req, res, next){
 
 //Function to find questions by category
 exports.findQuestionByCategory = function (req, res, next){
-  console.log('findQuestionByCategory',req.query.popular);
+  console.log('findQuestionByCategory',req.query.popular, req.params.category);
   var categorySearch = req.params.category
-  // Query sroting by population
+  categorySearch = categorySearch.split(',')
+  console.log('categorySearch',categorySearch);
+  // Query sorting by population
   if(req.query.popular){
-    Question.find({category:categorySearch})
+    Question.find({category:{ $in:categorySearch }})
       .sort({nPositiveVotes:req.query.popular,date:-1})
       .populate('user')
       .then(questions => {
@@ -118,7 +120,7 @@ exports.findQuestionByCategory = function (req, res, next){
         next(err)
       })
   }else{
-    Question.find({category:categorySearch})
+    Question.find({category:{ $in:categorySearch }})
       .sort({date:-1})
       .populate('user')
       .then(questions => {
@@ -173,6 +175,17 @@ exports.findQuestionByLocation = function(req, res, next){
   }).catch(err=>{
     next(err)
   })
+}
+
+//Find question by word
+exports.searchByWord = function (req, res, next){
+  var searchWord = req.params.search
+  Question.find({$text: { $search: searchWord }}).populate('user').then(questions => {
+    console.log('After searchByWord', questions);
+    res.json({questions})
+  }).catch(err =>
+    next(err)
+  )
 }
 
 //Function to update the positiveVotes and negativeVotes properties

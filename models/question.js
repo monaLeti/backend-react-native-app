@@ -10,10 +10,11 @@ var questionSchema = new Schema({
   content: {
     type: String,
     default: '',
-    required: 'Por favor introduce una pregunta'
+    required: 'Por favor introduce una pregunta',
+    text: true
   },
   category:{
-    type:String
+    type:Array
   },
   date:{
     type: Date,
