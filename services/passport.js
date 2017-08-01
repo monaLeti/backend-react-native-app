@@ -27,8 +27,10 @@ var localOptions = {
 }
 
 var localStrategy = new LocalStrategy(localOptions, function(email, password, done){
+  console.log('localStrategy');
   //First look for the user in the database
   User.findOne({email:email}, function(err, user){
+    console.log(err,user);
     if(err){
       done(err,null)
     }

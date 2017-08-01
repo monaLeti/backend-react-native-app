@@ -20,21 +20,10 @@ var questionSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  nPositiveVotes: {
-    type:Number,
-    default: 0
-  },
-  positiveVotes:[{
+  likes:[{
     type: Schema.Types.ObjectId,
-    ref: 'User'
-  }],
-  nNegativeVotes: {
-    type:Number,
-    default: 0
-  },
-  negativeVotes:[{
-    type: Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    default: [],
   }],
   answers:[{
     type: Schema.Types.ObjectId,

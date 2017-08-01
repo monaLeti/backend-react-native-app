@@ -61,7 +61,7 @@ exports.findAllQuestion = function (req, res, next){
   // Query sroting by population
   if(req.query.popular){
     Question.find()
-      .sort({nPositiveVotes:req.query.popular, date: -1})
+      .sort({likes:req.query.popular, date: -1})
       .populate('user')
       .exec(function(err, questions){
         if (err) {
@@ -111,7 +111,7 @@ exports.findQuestionByCategory = function (req, res, next){
   // Query sorting by population
   if(req.query.popular){
     Question.find({category:{ $in:categorySearch }})
-      .sort({nPositiveVotes:req.query.popular,date:-1})
+      .sort({likes:req.query.popular,date:-1})
       .populate('user')
       .then(questions => {
         console.log('findQuestionByCategory',questions);
@@ -134,7 +134,6 @@ exports.findQuestionByCategory = function (req, res, next){
 
 // Find Questions by User Location
 exports.findQuestionByLocation = function(req, res, next){
-
   // Distance in km
   var searchRadius = req.query.distance || 2
   var categorySelected = req.query.category
@@ -188,7 +187,7 @@ exports.searchByWord = function (req, res, next){
   )
 }
 
-//Function to update the positiveVotes and negativeVotes properties
+//Function to update the likes
 exports.updateReaction = function (req, res, next){
   Question.find({_id:req.params.questionId}).then( response =>{
     var modelToUse = Question
@@ -196,65 +195,29 @@ exports.updateReaction = function (req, res, next){
     if(response.length === 0){
       modelToUse = Answer
     }
-    modelToUse.update(
-      {_id:req.params.questionId},
-      {
-        $inc : {
-          nPositiveVotes:req.body.nPositiveVotes,
-          nNegativeVotes:req.body.nNegativeVotes
-        }
-      }
-    ).then(response => {
-      if (req.body.nPositiveVotes === 1) {
-        modelToUse.update(
-          {_id:req.params.questionId},
-          {$push: {positiveVotes: new ObjectId(req.body.user)}}
-        ).then(response =>{
-          console.log('after update',response);
-          res.json(response)
-        }).catch(err =>{
-          console.log('after update err',err);
-          next(err)
-        })
-      } else if (req.body.nPositiveVotes === -1){
-        modelToUse.update(
-          {_id:req.params.questionId},
-          {$pull: {positiveVotes: new ObjectId(req.body.user)}}
-        ).then(response =>{
-          console.log('after update',response);
-          res.json(response)
-        }).catch(err =>{
-          console.log('after update err',err);
-          next(err)
-        })
-      }
-      if (req.body.nNegativeVotes === 1) {
-        modelToUse.update(
-          {_id:req.params.questionId},
-          {$push: {negativeVotes: new ObjectId(req.body.user)}}
-        ).then(response =>{
-          console.log('after update',response);
-          res.json(response)
-        }).catch(err =>{
-          console.log('after update err',err);
-          next(err)
-        })
-      } else if (req.body.nNegativeVotes === -1){
-        modelToUse.update(
-          {_id:req.params.questionId},
-          {$pull: {negativeVotes: new ObjectId(req.body.user)}}
-        ).then(response =>{
-          console.log('after update',response);
-          res.json(response)
-        }).catch(err =>{
-          console.log('after update err',err);
-          next(err)
-        })
-      }
-
-    }).catch(error => {
-      console.log('update ERROR updateReaction',error);
-    })
+    if (req.body.like === 1) {
+      modelToUse.update(
+        {_id:req.params.questionId},
+        {$push: {likes: new ObjectId(req.body.user)}}
+      ).then(response =>{
+        console.log('after update',response);
+        res.json(response)
+      }).catch(err =>{
+        console.log('after update err',err);
+        next(err)
+      })
+    } else if (req.body.like === -1){
+      modelToUse.update(
+        {_id:req.params.questionId},
+        {$pull: {likes: new ObjectId(req.body.user)}}
+      ).then(response =>{
+        console.log('after update',response);
+        res.json(response)
+      }).catch(err =>{
+        console.log('after update err',err);
+        next(err)
+      })
+    }
   }).catch(error => {
     console.log('FIND ERROR updateReaction',error);
   })
