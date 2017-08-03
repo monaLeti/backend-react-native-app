@@ -3,9 +3,11 @@ const Question = require('../models/question')
 var ObjectId = require('mongodb').ObjectID;
 
 exports.createAnswer = (req, res, next) => {
+  console.log(req.body.user);
   var answer = new Answer({
     user: new ObjectId(req.body.user),
     content:req.body.content,
+    category:req.body.category,
   })
   answer.save().then((answer) => {
     //Save the answerID into its question parent
@@ -48,6 +50,7 @@ exports.findAnswers = function(req, res, next){
       populate: {path:'user'}
     })
     .exec(function(err, question){
+      console.log('findAnswers',question);
       if (err) {
         console.log('err findAnswers');
         next(err)

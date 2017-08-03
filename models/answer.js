@@ -12,23 +12,17 @@ var answerSchema = new Schema({
     type: String,
     default: ''
   },
+  category:{
+    type:Array
+  },
   date:{
     type: Date,
     default: Date.now
   },
-  nPositiveVotes: {
-    type:Number
-  },
-  positiveVotes:[{
+  likes:[{
     type: Schema.Types.ObjectId,
-    ref: 'User'
-  }],
-  nNegativeVotes: {
-    type:Number
-  },
-  negativeVotes:[{
-    type: Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    default: [],
   }]
 })
 
