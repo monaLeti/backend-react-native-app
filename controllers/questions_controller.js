@@ -222,3 +222,34 @@ exports.updateReaction = function (req, res, next){
     console.log('FIND ERROR updateReaction',error);
   })
 }
+
+//Function to update the favourites
+exports.updateFavourite = function (req, res, next){
+  Question.find({_id:req.params.questionId}).then( response =>{
+    if (req.body.favourite === 1) {
+      Question.update(
+        {_id:req.params.questionId},
+        {$push: {favorites: new ObjectId(req.body.user)}}
+      ).then(response =>{
+        console.log('after update favorites',response);
+        res.json(response)
+      }).catch(err =>{
+        console.log('after update favorites err',err);
+        next(err)
+      })
+    } else if (req.body.favourite === -1){
+      Question.update(
+        {_id:req.params.questionId},
+        {$pull: {favorites: new ObjectId(req.body.user)}}
+      ).then(response =>{
+        console.log('after update favorites',response);
+        res.json(response)
+      }).catch(err =>{
+        console.log('after update err favorites',err);
+        next(err)
+      })
+    }
+  }).catch(error => {
+    console.log('FIND ERROR favorites',error);
+  })
+}

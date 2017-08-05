@@ -42,6 +42,9 @@ router.route('/findQuestionByCategory/:category')
 router.route('/updateReaction/:questionId')
   .put(QuestionController.updateReaction)
 
+router.route('/updateFavourite/:questionId')
+  .put(QuestionController.updateFavourite)
+
 router.route('/findNumberQuestion/:number')
   .get(QuestionController.findNumberQuestion)
 
