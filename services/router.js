@@ -62,4 +62,6 @@ router.route('/createAnswer/:questionId')
 router.route('/findAnswers/:questionId')
   .get(AnswerController.findAnswers)
 
+router.route('/updateFavouriteAnswer/:answerId')
+  .put(AnswerController.updateFavourite)
 module.exports = router

@@ -59,3 +59,35 @@ exports.findAnswers = function(req, res, next){
       }
     })
 }
+
+//Function to update the favourites
+exports.updateFavourite = function (req, res, next){
+  console.log('updateFavourite');
+  Answer.find({_id:req.params.answerId}).then( response =>{
+    if (req.body.favourite === 1) {
+      Answer.update(
+        {_id:req.params.answerId},
+        {$push: {favorites: new ObjectId(req.body.user)}}
+      ).then(response =>{
+        console.log('after update favorites',response);
+        res.json(response)
+      }).catch(err =>{
+        console.log('after update favorites err',err);
+        next(err)
+      })
+    } else if (req.body.favourite === -1){
+      Answer.update(
+        {_id:req.params.answerId},
+        {$pull: {favorites: new ObjectId(req.body.user)}}
+      ).then(response =>{
+        console.log('after update favorites',response);
+        res.json(response)
+      }).catch(err =>{
+        console.log('after update err favorites',err);
+        next(err)
+      })
+    }
+  }).catch(error => {
+    console.log('FIND ERROR favorites',error);
+  })
+}
