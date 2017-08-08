@@ -61,7 +61,7 @@ exports.findAllQuestion = function (req, res, next){
   // Query sroting by population
   if(req.query.popular){
     Question.find()
-      .sort({likes:req.query.popular, date: -1})
+      .sort({nLikes:req.query.popular, date: -1})
       .populate('user')
       .exec(function(err, questions){
         if (err) {
@@ -111,7 +111,7 @@ exports.findQuestionByCategory = function (req, res, next){
   // Query sorting by population
   if(req.query.popular){
     Question.find({category:{ $in:categorySearch }})
-      .sort({likes:req.query.popular,date:-1})
+      .sort({nLikes:req.query.popular,date:-1})
       .populate('user')
       .then(questions => {
         console.log('findQuestionByCategory',questions);
@@ -198,7 +198,14 @@ exports.updateReaction = function (req, res, next){
     if (req.body.like === 1) {
       modelToUse.update(
         {_id:req.params.questionId},
-        {$push: {likes: new ObjectId(req.body.user)}}
+        {
+          $inc : {
+            nLikes:req.body.like
+          },
+          $push: {
+            likes: new ObjectId(req.body.user)
+          }
+        }
       ).then(response =>{
         console.log('after update',response);
         res.json(response)
@@ -209,7 +216,14 @@ exports.updateReaction = function (req, res, next){
     } else if (req.body.like === -1){
       modelToUse.update(
         {_id:req.params.questionId},
-        {$pull: {likes: new ObjectId(req.body.user)}}
+        {
+          $inc : {
+            nLikes:req.body.like
+          },
+          $pull: {
+            likes: new ObjectId(req.body.user)
+          }
+        }
       ).then(response =>{
         console.log('after update',response);
         res.json(response)

@@ -25,6 +25,10 @@ var questionSchema = new Schema({
     ref: 'User',
     default: [],
   }],
+  nLikes: {
+    type:Number,
+    default: 0
+  },
   favorites:[{
     type: Schema.Types.ObjectId,
     ref: 'User',
