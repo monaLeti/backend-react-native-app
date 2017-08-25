@@ -51,6 +51,11 @@ router.route('/findNumberQuestion/:number')
 router.route('/findQuestionByLocation')
   .get(QuestionController.findQuestionByLocation)
 
+router.route('/findQuestionByUser/:user')
+  .get(QuestionController.findQuestionByUser)
+
+
+
 router.route('/searchByWord/:search')
   .get(QuestionController.searchByWord)
 

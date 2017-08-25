@@ -176,6 +176,15 @@ exports.findQuestionByLocation = function(req, res, next){
   })
 }
 
+// Find Questions by User Location
+exports.findQuestionByUser = function(req, res, next){
+  Question.find({user:req.params.user}).populate('user').then(questions=>{
+    res.json({questions})
+  }).catch(err=>{
+    next(err)
+  })
+}
+
 //Find question by word
 exports.searchByWord = function (req, res, next){
   var searchWord = req.params.search
