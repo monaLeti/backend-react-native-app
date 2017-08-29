@@ -39,15 +39,28 @@ exports.createQuestion = function (req, res, next){
     category:category,
   })
   question.save().then(questionSaved => {
+    console.log('questionSaved',questionSaved);
+    User.findOne({_id: ObjectId(req.body.user)}).then(user => {
+      if(user){
+        console.log('user who created question',user);
+        user.questions.push(questionSaved._id)
+        user.save().then(userUpdate =>{
+          console.log('userUpdate', userUpdate);
+        }).catch(err =>{
+          console.log('Error saving user updating', err);
+        })
+      }
+    }).catch(err=>{
+      console.log('Error updating user model', err);
+    })
     Question.find()
       .sort({date: -1})
       .populate('user')
       .exec(function(err, questions){
-        if (err) {
+        if (err || !questions) {
           console.log('err findAnswers');
           next(err)
         } else {
-          console.log('answers', questions);
           res.json({questions})
         }
       })

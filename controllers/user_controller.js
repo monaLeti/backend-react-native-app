@@ -15,3 +15,24 @@ exports.updateUserLocation = function(req, res, next){
     next(err)
   })
 }
+
+exports.findUserMessages = function(req, res, next){
+  console.log('findUserMessages',req.params.user);
+  User.findOne({_id:req.params.user})
+    .populate({
+      path: 'questions',
+      populate: {path:'user'}
+    })
+    .populate({
+      path: 'answers',
+      populate: {path:'user'}
+    })
+    .exec(function(err, user){
+      if (err) {
+        console.log('err findUserMessages');
+        next(err)
+      } else {
+        res.json({user})
+      }
+    })
+}

@@ -1,37 +1,54 @@
 const Answer = require('../models/answer')
 const Question = require('../models/question')
+const User = require('../models/user')
 var ObjectId = require('mongodb').ObjectID;
 
 exports.createAnswer = (req, res, next) => {
-  console.log(req.body.user);
   var answer = new Answer({
     user: new ObjectId(req.body.user),
     content:req.body.content,
     category:req.body.category,
   })
   answer.save().then((answer) => {
+    //Save the answerID into the user
+    User.findOne({_id: ObjectId(req.body.user)}).then(user => {
+      if(user){
+        user.answers.push(answer._id)
+        user.save().then(userUpdate =>{
+          console.log('userUpdate', userUpdate);
+        }).catch(err =>{
+          console.log('Error saving user updating', err);
+        })
+      }
+    }).catch(err=>{
+      console.log('Error updating user model', err);
+    })
     //Save the answerID into its question parent
     var questionID = req.params.questionId
     Question.findOne({_id: new ObjectId(questionID)}).then((question) => {
-      question.answers.push(answer)
-      question.save().then((questionSaved)=>{
-        Question.findOne({_id: new ObjectId(questionID)})
-          .populate('user')
-          .populate({
-            path: 'answers',
-            populate: {path:'user'}
-          })
-          .exec(function(err, question){
-            if (err) {
-              console.log('err findAnswers');
-              next(err)
-            } else {
-              res.json({question})
-            }
-          })
-      }).catch(err =>{
-        next(err)
-      })
+      if(question){
+        question.answers.push(answer)
+        question.save().then((questionSaved)=>{
+          Question.findOne({_id: new ObjectId(questionID)})
+            .populate('user')
+            .populate({
+              path: 'answers',
+              populate: {path:'user'}
+            })
+            .exec(function(err, question){
+              if (err) {
+                console.log('err findAnswers');
+                next(err)
+              } else {
+                res.json({question})
+              }
+            })
+        }).catch(err =>{
+          next(err)
+        })
+      } else {
+        res.json({})
+      }
     }).catch((err)=>{
       next(err)
     })

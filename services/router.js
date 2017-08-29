@@ -27,6 +27,8 @@ router.route('/facebook_auth')
 // User routes
 router.route('/updateUserLocation')
   .put(UserController.updateUserLocation)
+router.route('/findUserMessages/:user')
+  .get(UserController.findUserMessages)
 
 
 // Questions Routes
