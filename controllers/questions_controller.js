@@ -189,9 +189,18 @@ exports.findQuestionByLocation = function(req, res, next){
   })
 }
 
-// Find Questions by User Location
+// Find Questions by User
 exports.findQuestionByUser = function(req, res, next){
   Question.find({user:req.params.user}).populate('user').then(questions=>{
+    res.json({questions})
+  }).catch(err=>{
+    next(err)
+  })
+}
+
+// Find Favourites Questions by given the User
+exports.findFavouritesQuestionByUser = function(req, res, next){
+  Question.find({favorites:req.params.user}).populate('user').then(questions=>{
     res.json({questions})
   }).catch(err=>{
     next(err)

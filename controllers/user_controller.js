@@ -28,6 +28,7 @@ exports.findUserMessages = function(req, res, next){
       populate: {path:'user'}
     })
     .exec(function(err, user){
+      console.log('after findUserMessages', user);
       if (err) {
         console.log('err findUserMessages');
         next(err)

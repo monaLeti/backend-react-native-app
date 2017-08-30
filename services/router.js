@@ -56,6 +56,10 @@ router.route('/findQuestionByLocation')
 router.route('/findQuestionByUser/:user')
   .get(QuestionController.findQuestionByUser)
 
+router.route('/findFavouritesQuestionByUser/:user')
+  .get(QuestionController.findFavouritesQuestionByUser)
+
+
 
 
 router.route('/searchByWord/:search')
