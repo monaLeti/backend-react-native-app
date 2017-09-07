@@ -33,6 +33,9 @@ var userSchema = new Schema({
     type: [Number],  // [<longitude>, <latitude>]
     index: '2dsphere'      // create the geospatial index
   },
+  profile_picture: {
+    type: String
+  },
   sex:{
     type:String
   },

@@ -29,7 +29,8 @@ router.route('/updateUserLocation')
   .put(UserController.updateUserLocation)
 router.route('/findUserMessages/:user')
   .get(UserController.findUserMessages)
-
+router.route('/updateProfile/:user')
+  .put(UserController.updateProfilePicture)
 
 // Questions Routes
 router.route('/createQuestion')
@@ -59,7 +60,8 @@ router.route('/findQuestionByUser/:user')
 router.route('/findFavouritesQuestionByUser/:user')
   .get(QuestionController.findFavouritesQuestionByUser)
 
-
+router.route('/findQuestionByAnswer/:answer')
+  .get(QuestionController.findQuestionByAnswer)
 
 
 router.route('/searchByWord/:search')
@@ -73,6 +75,10 @@ router.route('/createAnswer/:questionId')
 router.route('/findAnswers/:questionId')
   .get(AnswerController.findAnswers)
 
+router.route('/findFavouritesAnswerByUser/:user')
+  .get(AnswerController.findFavouritesAnswerByUser)
+
 router.route('/updateFavouriteAnswer/:answerId')
   .put(AnswerController.updateFavourite)
+
 module.exports = router

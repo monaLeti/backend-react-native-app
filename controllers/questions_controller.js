@@ -207,6 +207,16 @@ exports.findFavouritesQuestionByUser = function(req, res, next){
   })
 }
 
+// Find Questions given answer
+exports.findQuestionByAnswer = function(req, res, next){
+  Question.findOne({answers:req.params.answer}).populate('user').then(questions=>{
+    res.json({questions})
+  }).catch(err=>{
+    next(err)
+  })
+}
+
+
 //Find question by word
 exports.searchByWord = function (req, res, next){
   var searchWord = req.params.search

@@ -77,6 +77,15 @@ exports.findAnswers = function(req, res, next){
     })
 }
 
+// Find Favourites Answers by given the User
+exports.findFavouritesAnswerByUser = function(req, res, next){
+  Answer.find({favorites:req.params.user}).populate('user').then(answers=>{
+    res.json({answers})
+  }).catch(err=>{
+    next(err)
+  })
+}
+
 //Function to update the favourites
 exports.updateFavourite = function (req, res, next){
   console.log('updateFavourite');
