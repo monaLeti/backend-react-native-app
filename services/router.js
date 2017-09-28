@@ -27,8 +27,14 @@ router.route('/facebook_auth')
 // User routes
 router.route('/updateUserLocation')
   .put(UserController.updateUserLocation)
+
 router.route('/findUserMessages/:user')
   .get(UserController.findUserMessages)
+
+router.route('/findFavouritesQuestionByUser/:user')
+  .get(UserController.findFavouritesQuestionByUser)
+
+
 router.route('/updateProfile/:user')
   .put(UserController.updateProfilePicture)
 
@@ -57,12 +63,8 @@ router.route('/findQuestionByLocation')
 router.route('/findQuestionByUser/:user')
   .get(QuestionController.findQuestionByUser)
 
-router.route('/findFavouritesQuestionByUser/:user')
-  .get(QuestionController.findFavouritesQuestionByUser)
-
 router.route('/findQuestionByAnswer/:answer')
   .get(QuestionController.findQuestionByAnswer)
-
 
 router.route('/searchByWord/:search')
   .get(QuestionController.searchByWord)

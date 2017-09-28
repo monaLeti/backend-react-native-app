@@ -89,31 +89,43 @@ exports.findFavouritesAnswerByUser = function(req, res, next){
 //Function to update the favourites
 exports.updateFavourite = function (req, res, next){
   console.log('updateFavourite');
-  Answer.find({_id:req.params.answerId}).then( response =>{
-    if (req.body.favourite === 1) {
-      Answer.update(
-        {_id:req.params.answerId},
-        {$push: {favorites: new ObjectId(req.body.user)}}
-      ).then(response =>{
-        console.log('after update favorites',response);
-        res.json(response)
-      }).catch(err =>{
-        console.log('after update favorites err',err);
-        next(err)
+  if (req.body.favourite === 1) {
+    Answer.update(
+      {_id:req.params.answerId},
+      {$push: {favorites: new ObjectId(req.body.user)}}
+    ).then(response =>{
+      console.log('after update favorites',response);
+      User.update(
+        {_id:req.body.user},
+        {$push: {favAnswers: new ObjectId(req.params.answerId)}}
+      ).then(userUpdateResponse => {
+        console.log('after update favorites inside the user',userUpdateResponse);
+      }).catch(err => {
+        console.log('error after update favorites inside the user',err);
       })
-    } else if (req.body.favourite === -1){
-      Answer.update(
-        {_id:req.params.answerId},
-        {$pull: {favorites: new ObjectId(req.body.user)}}
-      ).then(response =>{
-        console.log('after update favorites',response);
-        res.json(response)
-      }).catch(err =>{
-        console.log('after update err favorites',err);
-        next(err)
+      res.json(response)
+    }).catch(err =>{
+      console.log('after update favorites err',err);
+      next(err)
+    })
+  } else if (req.body.favourite === -1){
+    Answer.update(
+      {_id:req.params.answerId},
+      {$pull: {favorites: new ObjectId(req.body.user)}}
+    ).then(response =>{
+      console.log('after update favorites',response);
+      User.update(
+        {_id:req.body.user},
+        {$pull: {favAnswers: new ObjectId(req.params.answerId)}}
+      ).then(userUpdateResponse => {
+        console.log('after update favorites inside the user',userUpdateResponse);
+      }).catch(err => {
+        console.log('error after update favorites inside the user',err);
       })
-    }
-  }).catch(error => {
-    console.log('FIND ERROR favorites',error);
-  })
+      res.json(response)
+    }).catch(err =>{
+      console.log('after update err favorites',err);
+      next(err)
+    })
+  }
 }

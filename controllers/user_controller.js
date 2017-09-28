@@ -57,6 +57,29 @@ exports.findUserMessages = function(req, res, next){
     })
 }
 
+// Find Favourites Questions by given the User
+exports.findFavouritesQuestionByUser = function(req, res, next){
+  console.log('findFavouritesQuestionByUser',req.params.user);
+  User.findOne({_id:req.params.user})
+    .populate({
+      path: 'favQuestions',
+      populate: {path:'user'}
+    })
+    .populate({
+      path: 'favAnswers',
+      populate: {path:'user'}
+    })
+    .exec(function(err, user){
+      console.log('after findFavouritesQuestionByUser', user);
+      if (err) {
+        console.log('err findFavouritesQuestionByUser');
+        next(err)
+      } else {
+        res.json({user})
+      }
+    })
+}
+
 // Update profile picture
 exports.updateProfilePicture = function(req, res, next){
   console.log('findUserMessages',req);

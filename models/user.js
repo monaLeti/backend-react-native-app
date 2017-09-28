@@ -43,7 +43,15 @@ var userSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Question'
   }],
+  favQuestions:[{
+    type: Schema.Types.ObjectId,
+    ref: 'Question'
+  }],
   answers:[{
+    type: Schema.Types.ObjectId,
+    ref: 'Answer'
+  }],
+  favAnswers:[{
     type: Schema.Types.ObjectId,
     ref: 'Answer'
   }]
