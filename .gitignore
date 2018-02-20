@@ -1,1 +1,3 @@
 confFiles/app.config
+node_modules
+*.log
